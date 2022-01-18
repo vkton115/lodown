@@ -236,25 +236,18 @@ module.exports.partition = partition;
 
 function map(collection, func){
     var outputArr = [];
-    if(Array.isArray(collection)){
-        if (typeof func === "string"){
+    if (Array.isArray(collection)){
         for (var i = 0; i < collection.length; i++){
-            outputArr.push(collection[i][func]);
-        }
-    } else {
-            for (var i = 0; i < collection.length; i++){
-                var result = func(collection[i], i, collection);
-                outputArr.push(result);
-            }
+            outputArr.push(func(collection[i], i, collection));
         }
     } else {
         for (var key in collection){
-            var result = func(collection[key], key, collection);
-            outputArr.push(result);
+            outputArr.push(func(collection[key], key, collection));
         }
     }
-    return outputArr;  
+    return outputArr;
 }
+
 
 module.exports.map = map;
 
@@ -267,7 +260,9 @@ module.exports.map = map;
  */
 
 function pluck(array, prop){
-    return _.map(array, prop);
+    return _.map(array, function(current){
+        return current[prop]
+    });
 }
 
 module.exports.pluck = pluck;
@@ -348,6 +343,7 @@ module.exports.some = some;
  * reduce: function takes in parameters of an array, a function, and a seed. returns the value of the final function call.
  * @param {array}: takes in a parameter of an array
  * @param {function} action: calls function for every element of an array passing the arguments: previous result, element, and index.
+ * @param {seed value}: takes in the parameter of a seed value which will represent the previous result for the 1st iteration of the loop.
  * @returns {value}: returns the value of the last iteration of the function call.
  * 
  */
@@ -369,7 +365,7 @@ function reduce(array, func, seed){
 module.exports.reduce = reduce;
 
 /**
- * reduce: function takes in the parameter(s) of an object or multiple objects
+ * extend: function takes in the parameter(s) of an object or multiple objects
  * @param {object}: takes in a parameter(s) of any number of objects
  * @returns {value}: returns first object passed as a parameter with added properties of all other objects passed in as parameters.
  * 
